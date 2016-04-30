@@ -34,10 +34,10 @@ const config = {
 				'font-awesome-webpack!./webpack/font-awesome.config.js',
 				'./app/javascripts/homepage.js'
 			],
-			editor: [
+			skorkard: [
 				HOT_ENTRY, 
 				'font-awesome-webpack!./webpack/font-awesome.config.js', 
-				'./app/javascripts/editor.js'
+				'./app/javascripts/skorkard.js'
 			]
 		},
 		output: {
