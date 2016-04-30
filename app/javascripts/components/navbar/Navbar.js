@@ -8,7 +8,9 @@ import styles from './styles.scss';
 function render(state, appProps) {
 	return (
 		div(`.${styles.navbar}`, [
-			h1(`.${styles.logo}`, 'Skorkard')
+			div(`.${styles.navbarItem}`, [
+				h1(`.${styles.logo}`, 'Skorkard')
+			])
 		])
 	);
 }

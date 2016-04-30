@@ -1,3 +1,19 @@
 .skorkard {
-	
+	padding-top: 50px;
+	height: 100vh;
+}
+
+.column {
+	float: left;
+	height: 100%;
+}
+
+.leftColumn {
+	composes: column;
+	width: 50%;
+}
+
+.rightColumn {
+	composes: column;
+	width: 50%;
 }
