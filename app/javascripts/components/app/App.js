@@ -25,11 +25,9 @@ function view(state$, navbar, skorkard) {
 
 function renderChildren(DOM) {
 	const appProps$ = just(true);
-	const habitProps$ = just(true);
-	const scoreProps$ = just(true);
 	
 	const navbar = Navbar({ DOM, appProps$ });
-	const skorkard = Skorkard({ DOM, habitProps$, scoreProps$ });
+	const skorkard = Skorkard({ DOM });
 	
 	return { navbar, skorkard };
 }

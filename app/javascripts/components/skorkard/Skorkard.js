@@ -1,7 +1,8 @@
 /*jshint esversion: 6 */
-import { just, combine } from 'most';
+import { just, combine, from } from 'most';
 import { div, h1 } from '@motorcycle/dom';
 import styles from './styles.scss';
+import data from './../../../data';
 
 import Score from './score/Score';
 import Habits from './habits/Habits';
@@ -31,6 +32,17 @@ function view(state$, score, habits, calendar, analytics) {
 
 // COMPONENT
 
+function generateProps() {
+	const habitProps$ = just({ 
+		habits: data.habits, 
+		activeHabitIds: data.activeHabits, 
+		archivedHabitId: data.archivedHabits 
+	});
+	const scoreProps$ = just({ history: data.history });
+	
+	return { habitProps$, scoreProps$ };
+}
+
 function renderChildren(DOM, habitProps$, scoreProps$) {
 	const score = Score({ DOM, scoreProps$ });
 	const habits = Habits({ DOM, habitProps$ });
@@ -40,7 +52,8 @@ function renderChildren(DOM, habitProps$, scoreProps$) {
 	return { score, habits, calendar, analytics };
 }
 
-function Skorkard({ DOM, habitProps$, scoreProps$ }) {
+function Skorkard({ DOM }) {
+	const { habitProps$, scoreProps$ } = generateProps();
 	const { score, habits, calendar, analytics } = renderChildren(DOM, habitProps$, scoreProps$);
 	
 	const state$ = just(true);
