@@ -34,18 +34,21 @@ function model(habitProps$) {
 
 // VIEW
 
-function renderHabit(habit) {
-	return li(`.${styles.habit}`, habit.name);
+function renderHabit(type, habit) {
+	const className = type === 'positive' ? styles.positiveHabit : styles.negativeHabit;
+	return li(`.${className}`, habit.name);
 }
 
 function render(state) {
 	return (
 		div(`.${styles.habitsContainer}`, [
-			div(`.${styles.positiveHabitsContainer}`, [
-				ul(`.${styles.positiveHabits}`, map(renderHabit, state.active.positiveHabits))
+			div(`.${styles.positiveHabitsColumn}`, [
+				ul(`.${styles.positiveHabits}`, 
+					map(renderHabit.bind(null, 'positive'), state.active.positiveHabits))
 			]),
-			div(`.${styles.negativeHabitsContainer}`, [
-				ul(`.${styles.negativeHabits}`, map(renderHabit, state.active.negativeHabits))
+			div(`.${styles.negativeHabitsColumn}`, [
+				ul(`.${styles.negativeHabits}`, 
+					map(renderHabit.bind(null, 'negative'), state.active.negativeHabits))
 			])
 		])
 	);

@@ -2,3 +2,52 @@
 	padding-top: 40px;
 	height: 100%;
 }
+
+.habitsColumn {
+	float: left;
+	width: 50%;
+	padding: 10px;
+}
+
+.positiveHabitsColumn {
+	composes: habitsColumn;
+	padding-right: 5px;
+}
+
+.negativeHabitsColumn {
+	composes: habitsColumn;
+	padding-left: 5px;
+}
+
+.habits {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.positiveHabits {
+	composes: habits;
+}
+
+.negativeHabits {
+	composes: habits;
+}
+
+.habit {
+	padding: 10px 20px;
+	margin-bottom: 10px;
+	
+	&:hover {
+		cursor: move;
+	}
+}
+
+.positiveHabit {
+	composes: habit;
+	border: solid 1px black;
+}
+
+.negativeHabit {
+	composes: habit;
+	border: solid 1px black;
+}
