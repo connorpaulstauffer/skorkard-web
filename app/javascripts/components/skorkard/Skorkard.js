@@ -36,7 +36,7 @@ function generateProps() {
 	const habitProps$ = just({ 
 		habits: data.habits, 
 		activeHabitIds: data.activeHabits, 
-		archivedHabitId: data.archivedHabits 
+		archivedHabitIds: data.archivedHabits 
 	});
 	const scoreProps$ = just({ history: data.history });
 	
