@@ -6,11 +6,13 @@
 .column {
 	float: left;
 	height: 100%;
+	position: relative;
 }
 
 .leftColumn {
 	composes: column;
 	width: 50%;
+	border-right: solid 1px #000000;
 }
 
 .rightColumn {
