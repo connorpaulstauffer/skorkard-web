@@ -4,4 +4,4 @@ import { makeDOMDriver } from '@motorcycle/dom';
 
 import App from './components/app/App';
 
-run(App, { DOM: makeDOMDriver('#app') });
+run(App, { DOM: makeDOMDriver('#appContainer') });
