@@ -9,6 +9,8 @@ import Habits from './habits/Habits';
 import Calendar from './calendar/Calendar';
 import Analytics from './analytics/Analytics';
 
+import { animationFrameReady$ } from './../../helpers/animation';
+
 // VIEW
 
 function render(state, scoreVtree, habitsVtree, calendarVtree, analyticsVtree) {
@@ -58,7 +60,7 @@ function Skorkard({ DOM }) {
 	
 	const state$ = just(true);
 	const vtree$ = view(state$, score, habits, calendar, analytics);
-	
+		
 	return {
 		DOM: vtree$
 	};

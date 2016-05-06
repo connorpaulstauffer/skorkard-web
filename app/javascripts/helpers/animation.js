@@ -4,7 +4,7 @@ import { create } from 'most';
 const timeoutCallback = callback => 
 	window.setTimeout(callback, 1000 / 60);
 
-const requestAnimFrame = () =>
+const requestAnimFrame =
 	window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
 	window.mozRequestAnimationFrame ||
@@ -12,7 +12,11 @@ const requestAnimFrame = () =>
 
 const animationFrameReady$ = create(
 	(add, end, error) => {
-		const onReady = () => add(1) && requestAnimFrame(onReady);
+		const onReady = () => {
+			add(1);
+			requestAnimFrame(onReady);
+		};
+		
 		onReady();
 	}
 );
