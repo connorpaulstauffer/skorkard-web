@@ -2,7 +2,7 @@
 import { just, combine, from } from 'most';
 import { div, h1 } from '@motorcycle/dom';
 import styles from './styles.scss';
-import data from './../../../data';
+import data from './../../data';
 
 import Score from './score/Score';
 import Habits from './habits/Habits';

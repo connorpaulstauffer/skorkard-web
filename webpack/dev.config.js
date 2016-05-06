@@ -32,12 +32,12 @@ const config = {
 			homepage: [
 				HOT_ENTRY, 
 				'font-awesome-webpack!./webpack/font-awesome.config.js',
-				'./app/javascripts/homepage.js'
+				'./app/homepage.js'
 			],
 			skorkard: [
 				HOT_ENTRY, 
 				'font-awesome-webpack!./webpack/font-awesome.config.js', 
-				'./app/javascripts/skorkard.js'
+				'./app/skorkard.js'
 			]
 		},
 		output: {
