@@ -60,7 +60,8 @@ function view(state$) {
 
 // COMPONENT
 
-function Habits({ DOM, habitProps$ }) {
+function Habits({ DOM, habitCollectionModel }) {
+	// const habitVtrees$ = habitCollectionModel.map()
 	const state$ = model(habitProps$);
 	const vtree$ = view(state$);
 	

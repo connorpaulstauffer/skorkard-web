@@ -9,6 +9,8 @@ import Habits from './habits/Habits';
 import Calendar from './calendar/Calendar';
 import Analytics from './analytics/Analytics';
 
+import HabitCollectionModel from './../../models/habit_collection_model';
+
 import { animationFrameReady$ } from './../../helpers/animation';
 
 // VIEW
@@ -34,29 +36,19 @@ function view(state$, score, habits, calendar, analytics) {
 
 // COMPONENT
 
-function generateProps() {
-	const habitProps$ = just({ 
-		habits: data.habits, 
-		activeHabitIds: data.activeHabits, 
-		archivedHabitIds: data.archivedHabits 
-	});
-	const scoreProps$ = just({ history: data.history });
-	
-	return { habitProps$, scoreProps$ };
-}
-
-function renderChildren(DOM, habitProps$, scoreProps$) {
-	const score = Score({ DOM, scoreProps$ });
-	const habits = Habits({ DOM, habitProps$ });
-	const calendar = Calendar({ DOM, scoreProps$ });
-	const analytics = Analytics({ DOM, habitProps$, scoreProps$ });
+function renderChildren(DOM, habitCollectionModel) {
+	const score = Score({ DOM });
+	const habits = Habits({ DOM, habitCollectionModel });
+	const calendar = Calendar({ DOM });
+	const analytics = Analytics({ DOM });
 	
 	return { score, habits, calendar, analytics };
 }
 
 function Skorkard({ DOM }) {
-	const { habitProps$, scoreProps$ } = generateProps();
-	const { score, habits, calendar, analytics } = renderChildren(DOM, habitProps$, scoreProps$);
+	const habitCollectionModel = HabitCollectionModel();
+
+	const { score, habits, calendar, analytics } = renderChildren(DOM, habitCollectionModel);
 	
 	const state$ = just(true);
 	const vtree$ = view(state$, score, habits, calendar, analytics);

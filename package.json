@@ -29,6 +29,7 @@
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
     "most": "^0.18.8",
+    "most-subject": "^3.0.2",
     "node-sass": "^3.5.3",
     "path": "^0.12.7",
     "postcss-loader": "^0.8.2",
