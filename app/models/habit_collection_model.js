@@ -5,18 +5,14 @@ import * as R from 'ramda';
 import HabitModel from './habit_model';
 import data from './../data';
 
-function createHabitDictionary() {
-	return just(data.habits).map(habitData => R.map(HabitModel, habitData));
-}
-
-function lookupHabits(habitIds, habitDictionary) {
-	return habitIds.map(habitId => habitDictionary[habitId]);
-}
-
-function createHabitCollection(habitDictionary$) {
-	const activeHabitIds$ = just(data.activeHabits);
+function processHabits(habits) {
+	const sortByOrder = R.sortBy(R.prop('order'));
 	
-	return activeHabitIds$.combine(lookupHabits, habitDictionary$);
+	return sortByOrder(Object.keys(habits).map(id => habits[id])).map(HabitModel);
+}
+
+function createHabitCollection() {	
+	return just(data.habits).map(processHabits);
 }
 
 function HabitCollectionModel() {
@@ -24,8 +20,7 @@ function HabitCollectionModel() {
 	const archiveHabit = id => true;
 	const activateHabit = id => true;
 	
-	const habitDictionary$ = createHabitDictionary();
-	const habitCollection$ = createHabitCollection(habitDictionary$);
+	const habitCollection$ = createHabitCollection();
 	
 	return {
 		habitCollection$,

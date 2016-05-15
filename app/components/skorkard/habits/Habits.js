@@ -41,6 +41,7 @@ function renderHabits(DOM, habitCollection, type) {
 }
 
 function render(DOM, habitCollection) {
+	console.log(habitCollection);
 	return (
 		div(`.${styles.habitsContainer}`, [
 			div(`.${styles.positiveHabitsColumn}`, [
