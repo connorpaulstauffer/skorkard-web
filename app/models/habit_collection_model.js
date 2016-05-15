@@ -9,11 +9,14 @@ function createHabitDictionary() {
 	return just(data.habits).map(habitData => R.map(HabitModel, habitData));
 }
 
+function lookupHabits(habitIds, habitDictionary) {
+	return habitIds.map(habitId => habitDictionary[habitId]);
+}
+
 function createHabitCollection(habitDictionary$) {
 	const activeHabitIds$ = just(data.activeHabits);
-	const lookupHabit = (habitId, habitDictionary) => habitDictionary[habitId];
 	
-	return activeHabitIds$.combine(lookupHabit, habitDictionary$);
+	return activeHabitIds$.combine(lookupHabits, habitDictionary$);
 }
 
 function HabitCollectionModel() {
