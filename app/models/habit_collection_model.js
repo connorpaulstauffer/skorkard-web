@@ -7,8 +7,11 @@ import data from './../data';
 
 function processHabits(habits) {
 	const sortByOrder = R.sortBy(R.prop('order'));
+	const habitArray = sortByOrder(Object.keys(habits).map(id => habits[id]));
+	const positive = habitArray.filter(habit => habit.score > 0).map(HabitModel);
+	const negative = habitArray.filter(habit => habit.score < 0).map(HabitModel);
 	
-	return sortByOrder(Object.keys(habits).map(id => habits[id])).map(HabitModel);
+	return { positive, negative };
 }
 
 function createHabitCollection() {	

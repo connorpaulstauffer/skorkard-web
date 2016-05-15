@@ -39,8 +39,6 @@ const data = {
 			order: 3
 		}
 	},
-	activeHabits: [1, 2, 3, 4, 5],
-	archivedHabits: [6],
 	history: {
 		'2016-04-30': {
 			1: 1,

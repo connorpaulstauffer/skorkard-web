@@ -6,34 +6,6 @@ import styles from './styles.scss';
 
 import Habit from './habit/Habit';
 
-// MODEL
-
-function splitHabits(ids, habits) {
-	let positiveHabits = [];
-	let negativeHabits = [];
-
-	const pushHabit = habit => 
-		habit.score > 0 ? positiveHabits.push(habit) : negativeHabits.push(habit);
-	
-	forEach(id => pushHabit(habits[id]), ids);
-	
-	return {
-		positiveHabits,
-		negativeHabits
-	};
-}
-
-function processHabits({ habits, activeHabitIds, archivedHabitIds }) {
-	return {
-		active: splitHabits(activeHabitIds, habits),
-		inactive: splitHabits(archivedHabitIds, habits)
-	};
-}
-
-function model(habitProps$) {
-	return habitProps$.map(processHabits);
-}
-
 // VIEW
 
 function renderHabits(DOM, habitCollection, type) {
@@ -41,14 +13,13 @@ function renderHabits(DOM, habitCollection, type) {
 }
 
 function render(DOM, habitCollection) {
-	console.log(habitCollection);
 	return (
 		div(`.${styles.habitsContainer}`, [
 			div(`.${styles.positiveHabitsColumn}`, [
-				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection, 'positive'))
+				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection.positive, 'positive'))
 			]),
 			div(`.${styles.negativeHabitsColumn}`, [
-				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection, 'negative'))
+				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection.negative, 'negative'))
 			])
 		])
 	);
