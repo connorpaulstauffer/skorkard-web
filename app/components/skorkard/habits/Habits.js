@@ -4,33 +4,59 @@ import * as R from 'ramda';
 import { div, ul, li } from '@motorcycle/dom';
 import styles from './styles.scss';
 
-// VIEW
+import Habit from './habit/Habit';
 
-function renderHabit(type, habit) {
-	const { habit$, habitActions } = habit;
-	const className = type === 'positive' ? styles.positiveHabit : styles.negativeHabit;
+// MODEL
 
-	return habit$.map(habit => li(`.${className}`, habit.name));
+function splitHabits(ids, habits) {
+	let positiveHabits = [];
+	let negativeHabits = [];
+
+	const pushHabit = habit => 
+		habit.score > 0 ? positiveHabits.push(habit) : negativeHabits.push(habit);
+	
+	forEach(id => pushHabit(habits[id]), ids);
+	
+	return {
+		positiveHabits,
+		negativeHabits
+	};
 }
 
-const renderPositiveHabit = (habit) => renderHabit('positive', habit);
-const renderNegativeHabit = (habit) => renderHabit('negative', habit);
+function processHabits({ habits, activeHabitIds, archivedHabitIds }) {
+	return {
+		active: splitHabits(activeHabitIds, habits),
+		inactive: splitHabits(archivedHabitIds, habits)
+	};
+}
 
-function render(habitCollection) {
+function model(habitProps$) {
+	return habitProps$.map(processHabits);
+}
+
+// VIEW
+
+function renderHabits(DOM, habitCollection, type) {
+	return habitCollection.map(habitModel => Habit({ DOM, habitModel, type }).DOM);
+}
+
+function render(DOM, habitCollection) {
 	return (
 		div(`.${styles.habitsContainer}`, [
 			div(`.${styles.positiveHabitsColumn}`, [
-				ul(`.${styles.positiveHabits}`, habitCollection.map(renderPositiveHabit))
+				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection, 'positive'))
 			]),
 			div(`.${styles.negativeHabitsColumn}`, [
-				ul(`.${styles.negativeHabits}`, habitCollection.map(renderNegativeHabit))
+				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection, 'negative'))
 			])
 		])
 	);
 }
 
-function view(habitCollection$) {
-	return habitCollection$.map(render);
+function view(habitCollection$, DOM) {
+	const renderWithDOM = R.curry(render)(DOM);
+	
+	return habitCollection$.map(renderWithDOM);
 }
 
 // COMPONENT
@@ -39,7 +65,7 @@ function Habits({ DOM, habitCollectionModel }) {
 	const { habitCollection$, habitCollectionActions } = habitCollectionModel;
 	
 	return {
-		DOM: view(habitCollection$)
+		DOM: view(habitCollection$, DOM)
 	};
 }
 
