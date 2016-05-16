@@ -18,12 +18,12 @@ function render(DOM, habitCollection, positiveHabitsFormVtree, negativeHabitsFor
 	return (
 		div(`.${styles.habitsContainer}`, [
 			div(`.${styles.positiveHabitsColumn}`, [
-				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection.positive, 'positive')),
-				positiveHabitsFormVtree
+				positiveHabitsFormVtree,
+				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection.positive, 'positive'))
 			]),
 			div(`.${styles.negativeHabitsColumn}`, [
-				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection.negative, 'negative')),
-				negativeHabitsFormVtree
+				negativeHabitsFormVtree,
+				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection.negative, 'negative'))
 			])
 		])
 	);

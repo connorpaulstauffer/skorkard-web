@@ -19,8 +19,9 @@ function createHabitCollection(habitDictionary$) {
 }
 
 const maxInArray = arr => R.last(R.sort((a, b) => a - b, arr.map(Number)));
+const minInArray = arr => R.sort((a, b) => a - b, arr.map(Number))[0];
 const nextHabitKey = habits => maxInArray(R.keys(habits)) + 1;
-const nextHabitOrder = habits => maxInArray(R.values(R.map(R.prop('order'), habits))) + 1;
+const nextHabitOrder = habits => minInArray(R.values(R.map(R.prop('order'), habits))) - 1;
 
 function createHabitDictionary(newHabits$) {
 	const dict$ =  newHabits$.scan(
