@@ -14,36 +14,36 @@ function renderHabits(DOM, habitCollection, type) {
 	return habitCollection.map(habitModel => Habit({ DOM, habitModel, type }).DOM);
 }
 
-function render(DOM, habitCollectionActions, habitCollection) {
-	const nameValue = 'test';
-	const scoreValue = 'testn';
+function render(DOM, habitCollection, positiveHabitsFormVtree, negativeHabitsFormVtree) {
 	return (
 		div(`.${styles.habitsContainer}`, [
 			div(`.${styles.positiveHabitsColumn}`, [
 				ul(`.${styles.positiveHabits}`, renderHabits(DOM, habitCollection.positive, 'positive')),
-				HabitForm(DOM, habitCollectionActions).DOM
+				positiveHabitsFormVtree
 			]),
 			div(`.${styles.negativeHabitsColumn}`, [
 				ul(`.${styles.negativeHabits}`, renderHabits(DOM, habitCollection.negative, 'negative')),
-				HabitForm(DOM, habitCollectionActions).DOM
+				negativeHabitsFormVtree
 			])
 		])
 	);
 }
 
-function view(habitCollection$, habitCollectionActions, DOM) {
-	const renderWithDOM = R.curry(render)(DOM, habitCollectionActions);
-	
-	return habitCollection$.map(renderWithDOM);
+function view(habitCollection$, DOM, positiveHabitsForm, negativeHabitsForm) {
+	const renderWithDOM = R.curry(render)(DOM);
+
+	return habitCollection$.combine(renderWithDOM, positiveHabitsForm.DOM, negativeHabitsForm.DOM);
 }
 
 // COMPONENT
 
 function Habits({ DOM, habitCollectionModel }) {
 	const { habitCollection$, habitCollectionActions } = habitCollectionModel;
+	const positiveHabitsForm = HabitForm(DOM, habitCollectionActions, 'positive');
+	const negativeHabitsForm = HabitForm(DOM, habitCollectionActions, 'negative');
 	
 	return {
-		DOM: view(habitCollection$, habitCollectionActions, DOM)
+		DOM: view(habitCollection$, DOM, positiveHabitsForm, negativeHabitsForm)
 	};
 }
 
