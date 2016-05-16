@@ -18,8 +18,17 @@ function createHabitCollection(habitDictionary$) {
 	return habitDictionary$.map(processHabits);
 }
 
-function createHabitDictionary() {
-	return just(data.habits);
+const maxInArray = arr => R.last(R.sort((a, b) => a - b, arr.map(Number)));
+const nextHabitKey = habits => maxInArray(R.keys(habits)) + 1;
+const nextHabitOrder = habits => maxInArray(R.values(R.map(R.prop('order'), habits))) + 1;
+
+function createHabitDictionary(newHabits$) {
+	const dict$ =  newHabits$.scan(
+		(habits, newHabit) => 
+			R.merge(habits, { 
+				[nextHabitKey(habits)]: R.merge(R.clone(newHabit), { order: nextHabitOrder(habits) }) 
+			}), data.habits);
+	return dict$;
 }
 
 function createHistory() {
@@ -37,11 +46,12 @@ function calculateScores(history, habitDictionary) {
 }
 
 function HabitCollectionModel() {
-	const addHabit = habitData => true;
+	const [newHabits$, newHabitObserver] = createSubject();
+	const addHabit = habitData => newHabitObserver.next(habitData);
 	const archiveHabit = id => true;
 	const activateHabit = id => true;
 	
-	const habitDictionary$ = createHabitDictionary();
+	const habitDictionary$ = createHabitDictionary(newHabits$);
 	const history$ = createHistory();
 	const scores$ = createScores(history$, habitDictionary$);
 	const habitCollection$ = createHabitCollection(habitDictionary$);
