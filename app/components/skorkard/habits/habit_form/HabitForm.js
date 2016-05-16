@@ -39,7 +39,10 @@ function render(type) {
 			div(`.${styles.habitNameWrapper}`, [
 				input(`.${styles.habitName}`, { 
 					attrs: { type: 'text', value: '' },
-					hook: { update: (_, newEl) => newEl.elm.value = '' }
+					hook: { update: (_, newEl) => {
+						newEl.elm.value = '';
+						newEl.elm.focus();
+					}}
 				})
 			]),
 			div(`.${styles.habitScoreWrapper}`, [
