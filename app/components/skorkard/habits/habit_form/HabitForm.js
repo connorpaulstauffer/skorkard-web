@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-import { form, input, button } from '@motorcycle/dom';
+import { form, input, button, div } from '@motorcycle/dom';
 import { just } from 'most';
 import styles from './styles.scss';
 import { selector } from './../../../../helpers/styles';
@@ -13,7 +13,8 @@ function createIntent(DOM, habitCollectionActions, type) {
 		
 	const scoreValue$ = DOM.select(`.${type}`).select(selector(styles.habitScore))
 		.events('input')
-		.map(ev => parseInt(ev.target.value));
+		.map(ev => parseInt(ev.target.value))
+		.startWith(defaultValue(type));
 		
 	const formValues = (name, score) => ({ name, score, active: true });
 		
@@ -30,18 +31,27 @@ function createIntent(DOM, habitCollectionActions, type) {
 
 const maxValue = type => type === 'positive' ? '' : -1;
 const minValue = type => type === 'positive' ? 1 : '';
+const defaultValue = type => type === 'positive' ? 1 : -1;
 
 function render(type) {
 	return (
 		form(`.${styles.habitForm} ${type}`, [
-			input(`.${styles.habitName}`, { 
-				attrs: { type: 'text', value: '' },
-				hook: { update: (_, newEl) => newEl.elm.value = '' }
-			}),
-			input(`.${styles.habitScore}`, { 
-				attrs: { type: 'number', max: maxValue(type), min: minValue(type), value: '' },
-				hook: { update: (_, newEl) => newEl.elm.value = '' }
-			}),
+			div(`.${styles.habitNameWrapper}`, [
+				input(`.${styles.habitName}`, { 
+					attrs: { type: 'text', value: '' },
+					hook: { update: (_, newEl) => newEl.elm.value = '' }
+				})
+			]),
+			div(`.${styles.habitScoreWrapper}`, [
+				input(`.${styles.habitScore}`, { 
+					attrs: { 
+						type: 'number', 
+						max: maxValue(type), 
+						min: minValue(type), 
+						value: defaultValue(type) 
+					}
+				})
+			]),
 			// hidden button hack to submit form
 			button(`.${styles.submitButton}`, { attrs: { type: 'submit' } })
 		])

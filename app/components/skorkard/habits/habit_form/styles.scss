@@ -1,13 +1,42 @@
 .habitForm {
-	color: black;
+	width: 100%;
+	padding: 10px 0;
+}
+
+.habitFormInput {
+	font-size: 18px;
+	border: none;
+	border: solid 1px black;
+	width: 100%;
+	
+	&:focus {
+		outline: none;
+	}
+}
+
+.inputWrapper {
+	display: inline-block;
+}
+
+.habitNameWrapper {
+	composes: inputWrapper;
+	width: 75%;
+	padding-right: 5px;
+}
+
+.habitScoreWrapper {
+	composes: inputWrapper;
+	width: 25%;
+	padding-left: 5px;
 }
 
 .habitName {
-	color: black;
+	composes: habitFormInput;
 }
 
 .habitScore {
-	color: black;
+	composes: habitFormInput;
+	text-align: right;
 }
 
 .habitFormSubmit {
