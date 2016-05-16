@@ -18,7 +18,7 @@ function createHabitCollection(habitDictionary$) {
 	return habitDictionary$.map(processHabits);
 }
 
-const nextHabitKey = habits => R.scan(R.max, R.keys(habits).map(Number)) + 1;
+const nextHabitKey = habits => R.reduce(R.max, -Infinity, R.keys(habits).map(Number)) + 1;
 const nextHabitOrder = habits => R.reduce(
 	R.min, Infinity, R.values(R.map(R.prop('order'), habits))) - 1;
 
@@ -26,8 +26,9 @@ function createHabitDictionary(newHabits$) {
 	const dict$ =  newHabits$.scan(
 		(habits, newHabit) => 
 			R.merge(habits, { 
-				[nextHabitKey(habits)]: R.merge(R.clone(newHabit), { order: nextHabitOrder(habits) }) 
+				[nextHabitKey(habits)]: R.merge(newHabit, { order: nextHabitOrder(habits) }) 
 			}), data.habits);
+	// dict$.observe(console.log.bind(console))
 	return dict$;
 }
 
