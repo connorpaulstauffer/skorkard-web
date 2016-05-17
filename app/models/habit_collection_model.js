@@ -42,9 +42,9 @@ const habitMods = {
 
 const HabitCollectionModel = () => {
 	const [habitDictionary$, habitDispatch] = createModel(habitMods, data.habits);
-	const habitList$ = habitDictionary$.map(processHabits);
+	const habitLists$ = habitDictionary$.map(processHabits);
 	
-	return { habitDictionary$, habitList$, habitDispatch };
+	return { habitDictionary$, habitLists$, habitDispatch };
 };
 
 export default HabitCollectionModel;

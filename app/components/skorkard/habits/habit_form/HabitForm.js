@@ -6,7 +6,7 @@ import { selector } from './../../../../helpers/styles';
 
 // INTENT
 
-function createIntent(DOM, habitCollectionActions, type) {
+const createIntent = (DOM, habitDispatch, type) => {
 	const nameValue$ = DOM.select(`.${type}`).select(selector(styles.habitName))
 		.events('input')
 		.map(ev => ev.target.value);
@@ -22,10 +22,10 @@ function createIntent(DOM, habitCollectionActions, type) {
 		.events('submit')
 		.tap(ev => ev.preventDefault())
 		.sample(formValues, nameValue$, scoreValue$)
-		.tap(habitCollectionActions.addHabit);
+		.tap(habit => habitDispatch.next(ADD_HABIT, habit));
 		
 	return formSubmit$;
-}
+};
 
 // VIEW
 
@@ -33,46 +33,43 @@ const maxValue = type => type === 'positive' ? '' : -1;
 const minValue = type => type === 'positive' ? 1 : '';
 const defaultValue = type => type === 'positive' ? 1 : -1;
 
-function render(type) {
-	return (
-		form(`.${styles.habitForm} ${type}`, [
-			div(`.${styles.habitNameWrapper}`, [
-				input(`.${styles.habitName}`, { 
-					attrs: { type: 'text', value: '' },
-					hook: { update: (_, newEl) => {
-						newEl.elm.value = '';
-						newEl.elm.focus();
-					}}
-				})
-			]),
-			div(`.${styles.habitScoreWrapper}`, [
-				input(`.${styles.habitScore}`, { 
-					attrs: { 
-						type: 'number', 
-						max: maxValue(type), 
-						min: minValue(type), 
-						value: defaultValue(type) 
-					}
-				})
-			]),
-			// hidden button hack to submit form
-			button(`.${styles.submitButton}`, { attrs: { type: 'submit' } })
-		])
-	);
-}
+const render = type => (
+	form(`.${styles.habitForm} ${type}`, [
+		div(`.${styles.habitNameWrapper}`, [
+			input(`.${styles.habitName}`, { 
+				attrs: { type: 'text', value: '' },
+				hook: { update: (_, newEl) => {
+					newEl.elm.value = '';
+					newEl.elm.focus();
+				}}
+			})
+		]),
+		div(`.${styles.habitScoreWrapper}`, [
+			input(`.${styles.habitScore}`, { 
+				attrs: { 
+					type: 'number', 
+					max: maxValue(type), 
+					min: minValue(type), 
+					value: defaultValue(type) 
+				}
+			})
+		]),
+		// hidden button hack to submit form
+		button(`.${styles.submitButton}`, { attrs: { type: 'submit' } })
+	])
+);
 
-function view(type, formSubmit$) {
-	return just(true).concat(formSubmit$).map(_ => render(type));
-}
+const view = (type, formSubmit) =>
+	just(true).concat(formSubmit$).map(_ => render(type));
 
 // COMPONENT
 
-function HabitForm(DOM, habitCollectionActions, type) {
-	const formSubmit$ = createIntent(DOM, habitCollectionActions, type);
+const HabitForm = (DOM, habitDispatch, type) => {
+	const formSubmit$ = createIntent(DOM, habitDispatch, type);
 	
 	return {
 		DOM: view(type, formSubmit$)
 	};
-}
+};
 
 export default HabitForm;
