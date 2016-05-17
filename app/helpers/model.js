@@ -1,5 +1,4 @@
 /*jshint esversion: 6 */
-import { curry } from 'ramda';
 import { createSubject } from './subject';
 
 const createModel = (mods, initialValue) => {

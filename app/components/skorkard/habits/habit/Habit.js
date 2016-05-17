@@ -1,24 +1,20 @@
 /*jshint esversion: 6 */
-import * as R from 'ramda';
 import { li } from '@motorcycle/dom';
 import styles from './styles.scss';
 
 // VIEW
 
-function view(habit$, type) {
-	const className = type === 'positive' ? styles.positiveHabit : styles.negativeHabit;
+const className = type => 
+	type === 'positive' ? styles.positiveHabit : styles.negativeHabit;
 
-	return habit$.map(habit => li(`.${className}`, habit.name));
-}
+const view = (habit, type) => li(`.${className(type)}`, habit.name);
 
 // COMPONENT
 
-function Habit({ DOM, habitModel, type }) {
-	const { habit$, habitActions$ } = habitModel;
-	
+const Habit = (DOM, habit, type) => {
 	return {
-		DOM: view(habit$, type)
+		DOM: view(habit, type)
 	};
-}
+};
 
 export default Habit;

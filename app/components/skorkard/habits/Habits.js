@@ -10,35 +10,32 @@ import HabitForm from './habit_form/HabitForm';
 
 // VIEW
 
-function renderHabits(DOM, habitCollection, type) {
-	return habitCollection
-		.map(habitModel => Habit({ DOM, habitModel, type }).DOM);
-}
+const renderHabits = (DOM, habitList, type) =>
+	habitList.map(habit => Habit(DOM, habit, type).DOM);
 
-function render(DOM, habitCollection, positiveHabitsFormVtree, 
-	negativeHabitsFormVtree) {
-	return (
-		div(`.${styles.habitsContainer}`, [
-			div(`.${styles.positiveHabitsColumn}`, [
-				positiveHabitsFormVtree,
-				ul(`.${styles.positiveHabits}`, 
-					renderHabits(DOM, habitCollection.positive, 'positive'))
-			]),
-			div(`.${styles.negativeHabitsColumn}`, [
-				negativeHabitsFormVtree,
-				ul(`.${styles.negativeHabits}`, 
-					renderHabits(DOM, habitCollection.negative, 'negative'))
-			])
+const render = (DOM, habitLists, positiveHabitsFormVtree, 
+	negativeHabitsFormVtree) => (
+	div(`.${styles.habitsContainer}`, [
+		div(`.${styles.positiveHabitsColumn}`, [
+			positiveHabitsFormVtree,
+			ul(`.${styles.positiveHabits}`, 
+				renderHabits(DOM, habitLists.positive, 'positive'))
+		]),
+		div(`.${styles.negativeHabitsColumn}`, [
+			negativeHabitsFormVtree,
+			ul(`.${styles.negativeHabits}`, 
+				renderHabits(DOM, habitLists.negative, 'negative'))
 		])
-	);
-}
+	])
+);
 
-function view(habitCollection$, DOM, positiveHabitsForm, negativeHabitsForm) {
+const view = (habitLists$, DOM, positiveHabitsForm, 
+	negativeHabitsForm) => {
 	const renderWithDOM = R.curry(render)(DOM);
-
-	return habitCollection$
+	
+	return habitLists$
 		.combine(renderWithDOM, positiveHabitsForm.DOM, negativeHabitsForm.DOM);
-}
+};
 
 // COMPONENT
 
@@ -52,7 +49,7 @@ const Habits = ({ DOM, habitCollectionModel }) => {
 	const negativeHabitsForm = HabitForm(DOM, habitDispatch, 'negative');
 	
 	return {
-		DOM: view(habitCollection$, DOM, positiveHabitsForm, negativeHabitsForm)
+		DOM: view(habitList$, DOM, positiveHabitsForm, negativeHabitsForm)
 	};
 } 
 

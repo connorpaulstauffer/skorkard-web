@@ -8,8 +8,8 @@ import data from './../data';
 const processHabits = habits => {
 	const sortByOrder = sortBy(prop('order'));
 	const habitArray = sortByOrder(keys(habits).map(id => habits[id]));
-	const positive = habitArray.filter(habit => habit.score > 0).map(HabitModel);
-	const negative = habitArray.filter(habit => habit.score < 0).map(HabitModel);
+	const positive = habitArray.filter(habit => habit.score > 0);
+	const negative = habitArray.filter(habit => habit.score < 0);
 	
 	return { positive, negative };
 };
