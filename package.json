@@ -43,5 +43,8 @@
     "webpack": "^1.13.0",
     "webpack-hot-middleware": "^2.10.0",
     "webpack-module-hot-accept": "^1.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^2.10.2"
   }
 }

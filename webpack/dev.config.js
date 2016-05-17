@@ -1,13 +1,13 @@
 /*jshint esversion: 6 */
-import webpack from 'webpack';
-import path from 'path';
-import precss from 'precss';
-import autoprefixer from 'autoprefixer';
+import webpack from 'webpack'
+import path from 'path'
+import precss from 'precss'
+import autoprefixer from 'autoprefixer'
 
-const HOST = 'localhost';
-const PORT = 3001;
-const PUBLIC_PATH = `//${HOST}:${PORT}/assets/`;
-const HOT_ENTRY = `webpack-hot-middleware/client?path=//${HOST}:${PORT}/__webpack_hmr`;
+const HOST = 'localhost'
+const PORT = 3001
+const PUBLIC_PATH = `//${HOST}:${PORT}/assets/`
+const HOT_ENTRY = `webpack-hot-middleware/client?path=//${HOST}:${PORT}/__webpack_hmr`
 
 const config = {
 	server: {
@@ -69,7 +69,7 @@ const config = {
 			]
 		},
 		postcss: function (webpack) {
-				return [precss, autoprefixer];
+				return [precss, autoprefixer]
 		},
 		plugins: [
 			new webpack.optimize.OccurenceOrderPlugin(),
@@ -81,6 +81,6 @@ const config = {
 			extensions: ['', '.js']
 		}
 	}
-};
+}
 
-export default config;
+export default config

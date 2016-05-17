@@ -1,33 +1,33 @@
 /*jshint esversion: 6 */
 import { 
 	sortBy, prop, keys, reduce, values, 
-	merge, sum, curry, evolve, max, min, map 
-} from 'ramda';
-import { createModel } from './../helpers/model';
-import data from './../data';
+	merge, evolve, max, min, map 
+} from 'ramda'
+import { createModel } from './../helpers/model'
+import data from './../data'
 
 // HELPERS
 
-const sortByOrder = sortBy(prop('order'));
+const sortByOrder = sortBy(prop('order'))
 
 const processHabits = habits => {
-	const habitArray = sortByOrder(keys(habits).map(id => habits[id]));
-	const positive = habitArray.filter(habit => habit.score > 0);
-	const negative = habitArray.filter(habit => habit.score < 0);
+	const habitArray = sortByOrder(keys(habits).map(id => habits[id]))
+	const positive = habitArray.filter(habit => habit.score > 0)
+	const negative = habitArray.filter(habit => habit.score < 0)
 	
-	return { positive, negative };
-};
+	return { positive, negative }
+}
 
-const nextHabitKey = habits => reduce(max, -Infinity, keys(habits).map(Number)) + 1;
+const nextHabitKey = habits => reduce(max, -Infinity, keys(habits).map(Number)) + 1
 
 const nextHabitOrder = habits => reduce(
-	min, Infinity, values(map(prop('order'), habits))) - 1;
+	min, Infinity, values(map(prop('order'), habits))) - 1
 	
 	
 // MODIFICATIONS
 
 const updateHabit = (habits, habitId, transform) =>
-	merge(habits, evolve(transform, habits[habitId]));
+	merge(habits, evolve(transform, habits[habitId]))
 
 const habitMods = {
 	ADD_HABIT: (habits, newHabit) => merge(habits, { 
@@ -39,16 +39,16 @@ const habitMods = {
 		updateHabit(habits, habitId, { active: _ => true }),
 	UPDATE_HABIT: (habits, { habitId, transform }) => 
 		updateHabit(habits, habitId, transform)
-};
+}
 	
 	
 // MODEL
 
 const HabitCollectionModel = () => {
-	const [habitDictionary$, habitDispatch] = createModel(habitMods, data.habits);
-	const habitLists$ = habitDictionary$.map(processHabits);
+	const [habitDictionary$, habitDispatch] = createModel(habitMods, data.habits)
+	const habitLists$ = habitDictionary$.map(processHabits)
 	
-	return { habitDictionary$, habitLists$, habitDispatch };
-};
+	return { habitDictionary$, habitLists$, habitDispatch }
+}
 
-export default HabitCollectionModel;
+export default HabitCollectionModel

@@ -48,6 +48,6 @@ const data = {
 			5: 2
 		}
 	}
-};
+}
 
-export default data;
+export default data
