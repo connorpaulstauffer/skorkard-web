@@ -1,13 +1,13 @@
 /*jshint esversion: 6 */
 import createSubject from './../helpers/subject';
 import { just } from 'most';
-import * as R from 'ramda';
+import { sortBy, prop, keys, reduce, values, merge, sum, curry, evolve } from 'ramda';
 import HabitModel from './habit_model';
 import data from './../data';
 
 function processHabits(habits) {
-	const sortByOrder = R.sortBy(R.prop('order'));
-	const habitArray = sortByOrder(R.keys(habits).map(id => habits[id]));
+	const sortByOrder = sortBy(prop('order'));
+	const habitArray = sortByOrder(keys(habits).map(id => habits[id]));
 	const positive = habitArray.filter(habit => habit.score > 0).map(HabitModel);
 	const negative = habitArray.filter(habit => habit.score < 0).map(HabitModel);
 	
@@ -18,15 +18,15 @@ function createHabitCollection(habitDictionary$) {
 	return habitDictionary$.map(processHabits);
 }
 
-const nextHabitKey = habits => R.reduce(R.max, -Infinity, R.keys(habits).map(Number)) + 1;
-const nextHabitOrder = habits => R.reduce(
-	R.min, Infinity, R.values(R.map(R.prop('order'), habits))) - 1;
+const nextHabitKey = habits => reduce(max, -Infinity, keys(habits).map(Number)) + 1;
+const nextHabitOrder = habits => reduce(
+	min, Infinity, values(map(prop('order'), habits))) - 1;
 
 function createHabitDictionary(newHabits$) {
 	const dict$ =  newHabits$.scan(
 		(habits, newHabit) => 
-			R.merge(habits, { 
-				[nextHabitKey(habits)]: R.merge(newHabit, { order: nextHabitOrder(habits) }) 
+			merge(habits, { 
+				[nextHabitKey(habits)]: merge(newHabit, { order: nextHabitOrder(habits) }) 
 			}), data.habits);
 	// dict$.observe(console.log.bind(console))
 	return dict$;
@@ -41,10 +41,34 @@ function createScores(history$, habitDictionary$) {
 }
 
 function calculateScores(history, habitDictionary) {
-	return R.map(counts => 
-		R.sum(R.keys(counts).map(habitId => 
+	return map(counts => 
+		sum(keys(counts).map(habitId => 
 			counts[habitId] * habitDictionary[habitId].score)), history);
 }
+
+const habitMods = {
+	ADD_HABIT: (habits, newHabit) => merge(habits, { 
+		[nextHabitKey(habits)]: merge(newHabit, { order: nextHabitOrder(habits) }) 
+	}),
+	ARCHIVE_HABIT: (habits, habitId) => 
+		updateHabit(habits, habitId, { active: _ => false }),
+	ACTIVATE_HABIT: (habits, habitId) => 
+		updateHabit(habits, habitId, { active: _ => true }),
+	UPDATE_HABIT: updateHabit
+};
+
+const updateHabit = (habits, habitId, transform) =>
+	merge(habits, evolve(transform, habits[habitId]));
+
+const historyMods = {
+	ADD_OCCURRENCE:,
+	REMOVE_OCCURENCE:
+};
+
+const modify = (mods, { model, action, data }) => mods[action](data);
+const curriedModify = curry(modify);
+const modifyHabits = curriedModify(habitMods);
+const modifyHistory = curriedModify(historyMods);
 
 function HabitCollectionModel() {
 	const [newHabits$, newHabitObserver] = createSubject();
