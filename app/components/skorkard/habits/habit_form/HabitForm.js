@@ -22,7 +22,7 @@ const createIntent = (DOM, habitDispatch, type) => {
 		.events('submit')
 		.tap(ev => ev.preventDefault())
 		.sample(formValues, nameValue$, scoreValue$)
-		.tap(habit => habitDispatch.next(ADD_HABIT, habit));
+		.tap(habit => habitDispatch('ADD_HABIT', habit));
 		
 	return formSubmit$;
 };
@@ -59,7 +59,7 @@ const render = type => (
 	])
 );
 
-const view = (type, formSubmit) =>
+const view = (type, formSubmit$) =>
 	just(true).concat(formSubmit$).map(_ => render(type));
 
 // COMPONENT

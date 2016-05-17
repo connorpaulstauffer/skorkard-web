@@ -49,7 +49,7 @@ const Habits = ({ DOM, habitCollectionModel }) => {
 	const negativeHabitsForm = HabitForm(DOM, habitDispatch, 'negative');
 	
 	return {
-		DOM: view(habitList$, DOM, positiveHabitsForm, negativeHabitsForm)
+		DOM: view(habitLists$, DOM, positiveHabitsForm, negativeHabitsForm)
 	};
 } 
 
