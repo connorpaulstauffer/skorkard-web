@@ -8,66 +8,33 @@ const keyMap = {
 }
 
 const generateKeyCommands = () => {
-	// const keyDown = () => fromEvent('keydown', window)
-	// 	.map(ev => keyMap[ev.keyCode || ev.which])
-	// 	// .filter(key => !isNil(key))
-	// 	.skipRepeats()
-	// 	
-	// const keyUp = () => fromEvent('keyup', window)
-	// 	.map(ev => keyMap[ev.keyCode || ev.which])
-	// 	// .filter(key => !isNil(key))
-	// 	.skipRepeats()
+	const keyUp$ = fromEvent('keyup', window)
+		.map(ev => ev.keyCode || ev.which)
 	
 	const keyDown$ = fromEvent('keydown', window)
 		.map(ev => ev.keyCode || ev.which)
-		.skipRepeats()
-		// .tap(code => console.log(`${code}: down`))
-		.map(code => keyMap[code])
 
-	const keyUp$ = fromEvent('keyup', window)
-		.map(ev => ev.keyCode || ev.which)
-		.skipRepeats()
-		// .tap(code => console.log(`${code}: up`))
-		.map(code => keyMap[code])
+	const keyDownFiltered$ = keyDown$.skipRepeats()
 	
-	// const knownKeyDown$ = keyDown$
-	// 	.map(code => keyMap[code])
-	// 	.filter(key => !isNil(key))
-
-	// keyDown$.map(_ => 'down').observe(console.log.bind(console))
-	// keyUp$.map(_ => 'up').observe(console.log.bind(console))
+	const keyDownCode$ = keyDown$.map(code => keyMap[code])
+	const keyDownCodeFiltered$ = keyDownFiltered$.map(code => keyMap[code])
 	
-	const keysReleased$ = keyDown$.map(_ => 1)
+	const keysReleased$ = keyDownFiltered$.map(_ => 1)
 		.merge(keyUp$.map(_ => -1))
 		.scan(add, 0)
 		.tap(value => console.log(value))
 		.filter(equals(0))
 	
-	const generateSequence = () => keyDown$
+	const generateSequence = () => keyDownCode$
 		.take(1)
-		.concat(keyDown$)
+		.concat(keyDownCodeFiltered$)
 		.until(keyUp$)
 		.reduce(flip(append), [])
 		
-	// keyUp$
-	// 	.tap(code => console.log(`${code}: up`))
-	// 	.drain()
-	// 
-	// keyDown$
-	// 	.tap(code => console.log(`${code}: down`))
-	// 	.drain()
-		
-	// keysReleased$.drain()
-		
-	keysReleased$.tap(_ => {
-		// console.log('hit')
-		fromPromise(generateSequence()).observe(console.log.bind(console))
-	}).drain()
+	const captureSequence = () => fromPromise(generateSequence())
 
-		// keysReleased$.drain()
-	// keysReleased$.map(_ => fromPromise(generateSequence()))
-	// 	.join()
-	// 	.observe(console.log.bind(console))
+	keysReleased$.map(captureSequence).join()
+		.observe(console.log.bind(console))
 }
   
 module.exports = {
