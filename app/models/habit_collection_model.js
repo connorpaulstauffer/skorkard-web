@@ -27,7 +27,7 @@ const nextHabitOrder = habits => reduce(
 // MODIFICATIONS
 
 const updateHabit = (habits, habitId, transform) =>
-	merge(habits, evolve(transform, habits[habitId]))
+	evolve({ [habitId]: transform }, habits)
 
 const habitMods = {
 	ADD_HABIT: (habits, newHabit) => merge(habits, { 
