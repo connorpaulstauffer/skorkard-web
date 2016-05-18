@@ -1,6 +1,7 @@
 import { just, combine } from 'most'
 import { div } from '@motorcycle/dom'
 import styles from './styles.scss'
+import { generateKeyCommands } from './../../helpers/keyboard'
 
 import Navbar from './../navbar/Navbar'
 import Skorkard from './../skorkard/Skorkard'
@@ -19,17 +20,18 @@ const view = (state$, navbar, skorkard) =>
 
 // COMPONENT
 
-const renderChildren = (DOM) => {
+const renderChildren = (DOM, keyCommands$) => {
 	const appProps$ = just(true)
 	
 	const navbar = Navbar({ DOM, appProps$ })
-	const skorkard = Skorkard({ DOM })
+	const skorkard = Skorkard({ DOM, keyCommands$ })
 	
 	return { navbar, skorkard }	
 }
 
 const App = ({ DOM }) => {
-	const { navbar, skorkard } = renderChildren(DOM)
+	const keyCommands$ = generateKeyCommands(DOM)
+	const { navbar, skorkard } = renderChildren(DOM, keyCommands$)
 	
 	const state$ = just(true)
 	const vtree$ = view(state$, navbar, skorkard)
