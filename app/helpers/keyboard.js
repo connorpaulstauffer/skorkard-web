@@ -8,44 +8,59 @@ const keyMap = {
 }
 
 const generateKeyCommands = () => {
-	const keyDown = () => fromEvent('keydown', window)
-		.map(ev => keyMap[ev.keyCode || ev.which])
-		.filter(key => !isNil(key))
-		.skipRepeats()
-		
-	const keyUp = () => fromEvent('keyup', window)
-		.map(ev => keyMap[ev.keyCode || ev.which])
-		.filter(key => !isNil(key))
-		.skipRepeats()
+	// const keyDown = () => fromEvent('keydown', window)
+	// 	.map(ev => keyMap[ev.keyCode || ev.which])
+	// 	// .filter(key => !isNil(key))
+	// 	.skipRepeats()
+	// 	
+	// const keyUp = () => fromEvent('keyup', window)
+	// 	.map(ev => keyMap[ev.keyCode || ev.which])
+	// 	// .filter(key => !isNil(key))
+	// 	.skipRepeats()
 	
 	const keyDown$ = fromEvent('keydown', window)
 		.map(ev => ev.keyCode || ev.which)
 		.skipRepeats()
+		// .tap(code => console.log(`${code}: down`))
+		.map(code => keyMap[code])
 
 	const keyUp$ = fromEvent('keyup', window)
 		.map(ev => ev.keyCode || ev.which)
-		// .skipRepeats()
-	
-	const knownKeyDown$ = keyDown$
+		.skipRepeats()
+		// .tap(code => console.log(`${code}: up`))
 		.map(code => keyMap[code])
-		.filter(key => !isNil(key))
+	
+	// const knownKeyDown$ = keyDown$
+	// 	.map(code => keyMap[code])
+	// 	.filter(key => !isNil(key))
 
 	// keyDown$.map(_ => 'down').observe(console.log.bind(console))
 	// keyUp$.map(_ => 'up').observe(console.log.bind(console))
+	
 	const keysReleased$ = keyDown$.map(_ => 1)
 		.merge(keyUp$.map(_ => -1))
 		.scan(add, 0)
-		// .tap(value => console.log(value))
+		.tap(value => console.log(value))
 		.filter(equals(0))
 	
-	const generateSequence = () => knownKeyDown$
+	const generateSequence = () => keyDown$
 		.take(1)
-		.concat(knownKeyDown$)
-		.until(keyUp())
+		.concat(keyDown$)
+		.until(keyUp$)
 		.reduce(flip(append), [])
 		
+	// keyUp$
+	// 	.tap(code => console.log(`${code}: up`))
+	// 	.drain()
+	// 
+	// keyDown$
+	// 	.tap(code => console.log(`${code}: down`))
+	// 	.drain()
+		
+	// keysReleased$.drain()
+		
 	keysReleased$.tap(_ => {
-		console.log('hit')
+		// console.log('hit')
 		fromPromise(generateSequence()).observe(console.log.bind(console))
 	}).drain()
 
