@@ -1,55 +1,55 @@
 import { fromEvent, fromPromise } from 'most'
 import { 
 	set, lensProp, append, flip, isNil,
-	omit, toString, isEmpty 
+	omit, toString, isEmpty, invertObj
 } from 'ramda'
 
-const ENTER = 'ENTER'
-const CTRL = 'CTRL'
-const Z = 'Z'
-
-const keyMap = {
-	13: ENTER,
-	17: CTRL,
-	90: Z
+const keyCodeDictionary = {
+	'ENTER': 13,
+	'CTRL': 17,
+	'Z': 90
 }
 
-const UNDO = 'UNDO'
+const keyDictionary = invertObj(keyCodeDictionary)
 
 const keySequences = {
-	[[CTRL, Z]]: UNDO
+	'UNDO': ['CTRL', 'Z']
 }
 
-const keySequence = sequence => keySequences[sequence]
+const keySequenceDictionary = invertObj(keySequences)
 
-const releasedKeyTrigger = (keyDown$, keyUp$) => 
-	keyDown$.map(key => (pressedKeys) => set(lensProp(key), true, pressedKeys))
-	.merge(keyUp$.map(key => (pressedKeys) => omit([toString(key)], pressedKeys)))
+const keySequence = sequence => keySequenceDictionary[sequence]
+
+const releasedKeyTrigger = (keyDownCode$, keyUpCode$) => 
+	keyDownCode$.map(key => 
+		(pressedKeys) => set(lensProp(key), true, pressedKeys))
+	.merge(keyUpCode$.map(key => 
+		(pressedKeys) => omit([toString(key)], pressedKeys)))
 	.scan((pressedKeys, transform) => transform(pressedKeys), {})
 	.filter(isEmpty)
 
 const whichKey = ev => ev.keyCode || ev.which
-const keyUp = () => fromEvent('keyup', window).map(whichKey)
-const keyDown = () => fromEvent('keydown', window).map(whichKey)
+const keyUpCode = () => fromEvent('keyup', window).map(whichKey)
+const keyDownCode = () => fromEvent('keydown', window).map(whichKey)
 
-const keyCode = key => keyMap[key]
+const lookupKey = key => keyDictionary[key]
 
 const generateKeyCommands = () => {
-	const keyUp$ = keyUp()
-	const keyDown$ = keyDown()
-	const keyDownFiltered$ = keyDown$.skipRepeats()
-	const keyDownCode$ = keyDown$.map(keyCode)
-	const keyDownCodeFiltered$ = keyDownFiltered$.map(keyCode)
+	const keyUpCode$ = keyUpCode()
+	const keyDownCode$ = keyDownCode()
+	const keyDownCodeFiltered$ = keyDownCode$.skipRepeats()
+	const keyDown$ = keyDownCode$.map(lookupKey)
+	const keyDownFiltered$ = keyDownCodeFiltered$.map(lookupKey)
 	
-	const generateSequence = () => keyDownCode$
+	const generateSequence = () => keyDown$
 		.take(1)
-		.concat(keyDownCodeFiltered$)
-		.until(keyUp$)
+		.concat(keyDownFiltered$)
+		.until(keyUpCode$)
 		.reduce(flip(append), [])
 		
 	const captureSequence = () => fromPromise(generateSequence())
 
-	releasedKeyTrigger(keyDown$, keyUp$)
+	releasedKeyTrigger(keyDownCode$, keyUpCode$)
 		.map(captureSequence).join()
 		.map(keySequence)
 		.filter(seq => !isNil(seq))
