@@ -4,9 +4,7 @@ import styles from './styles.scss'
 
 // VIEW
 
-const render = () =>
-	div(`.${styles.calendarContainer}`)
-
+const render = () => div(`.${styles.calendarContainer}`)
 
 // COMPONENT
 

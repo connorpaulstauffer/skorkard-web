@@ -1,4 +1,3 @@
-
 import { createSubject } from './subject'
 
 const createModel = (mods, initialValue) => {

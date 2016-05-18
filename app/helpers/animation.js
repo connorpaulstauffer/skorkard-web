@@ -1,4 +1,3 @@
-
 import { create } from 'most'
 
 const timeoutCallback = callback => 

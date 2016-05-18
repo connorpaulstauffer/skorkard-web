@@ -1,8 +1,6 @@
-
-import { just, combine, from } from 'most'
-import { div, h1 } from '@motorcycle/dom'
+import { just, combine } from 'most'
+import { div } from '@motorcycle/dom'
 import styles from './styles.scss'
-import data from './../../data'
 
 import Score from './score/Score'
 import Habits from './habits/Habits'
@@ -10,8 +8,6 @@ import Calendar from './calendar/Calendar'
 import Analytics from './analytics/Analytics'
 
 import HabitCollectionModel from './../../models/habit_collection_model'
-
-import { animationFrameReady$ } from './../../helpers/animation'
 
 // VIEW
 

@@ -1,5 +1,3 @@
-
-
 const data = {
 	habits: {
 		1: {
