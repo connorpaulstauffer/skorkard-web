@@ -1,5 +1,8 @@
 import { fromEvent, fromPromise } from 'most'
-import { isNil, append, flip, add, equals } from 'ramda'
+import { 
+	set, lensProp, append, flip, add, equals, 
+	omit, curry, toString, isEmpty 
+} from 'ramda'
 
 const keyMap = {
 	13: 'ENTER',
@@ -19,11 +22,19 @@ const generateKeyCommands = () => {
 	const keyDownCode$ = keyDown$.map(code => keyMap[code])
 	const keyDownCodeFiltered$ = keyDownFiltered$.map(code => keyMap[code])
 	
-	const keysReleased$ = keyDownFiltered$.map(_ => 1)
-		.merge(keyUp$.map(_ => -1))
-		.scan(add, 0)
-		.tap(value => console.log(value))
-		.filter(equals(0))
+	const setKeyPressed = (key, pressedKeys) => 
+		set(lensProp(key), true, pressedKeys)
+	const unsetKeyPressed = (key, pressedKeys) => 
+		omit([toString(key)], pressedKeys)
+	const updatePressedKeys = (pressedKeys, transform) => 
+		transform(pressedKeys)
+	
+	const pressedKeys$ = keyDown$.map(key => curry(setKeyPressed)(key))
+		.merge(keyUp$.map(key => curry(unsetKeyPressed)(key)))
+		.scan(updatePressedKeys, {})
+		// .observe(console.log.bind(console))
+	
+	const keysReleased$ = pressedKeys$.filter(isEmpty)
 	
 	const generateSequence = () => keyDownCode$
 		.take(1)
