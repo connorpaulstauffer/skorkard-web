@@ -1,21 +1,17 @@
-/*jshint esversion: 6 */
 import { just } from 'most'
 import { div } from '@motorcycle/dom'
 import styles from './styles.scss'
 
 // VIEW
 
-function view(state$) {
-	return state$.map(state => 
-		div(`.${styles.analyticsContainer}`)
-	)
-}
+const render = () =>
+	div(`.${styles.analyticsContainer}`)
 
 // COMPONENT
 
-function Analytics({ DOM }) {
+const Analytics = () => {
 	const state$ = just(true)
-	const vtree$ = view(state$)
+	const vtree$ = state$.map(render)
 	
 	return {
 		DOM: vtree$

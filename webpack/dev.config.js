@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import webpack from 'webpack'
 import path from 'path'
 import precss from 'precss'

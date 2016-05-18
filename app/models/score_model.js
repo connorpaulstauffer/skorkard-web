@@ -1,7 +1,5 @@
-/*jshint esversion: 6 */
-import { createModel } from './../helpers/model'
-import { map } from 'ramda'
-import { just } from 'most'
+
+import { sum, keys, map } from 'ramda'
 
 // HELPERS
 
@@ -18,4 +16,4 @@ const ScoreModel = (habitDictionary$, history$) => {
 	return { score$ }
 }
 
-export default HistoryModel
+export default ScoreModel

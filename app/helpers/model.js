@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { createSubject } from './subject'
 
 const createModel = (mods, initialValue) => {

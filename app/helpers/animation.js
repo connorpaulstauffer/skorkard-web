@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { create } from 'most'
 
 const timeoutCallback = callback => 
@@ -11,7 +11,7 @@ const requestAnimFrame =
 	timeoutCallback
 
 const animationFrameReady$ = create(
-	(add, end, error) => {
+	(add, end, _) => {
 		const onReady = () => {
 			add(1)
 			requestAnimFrame(onReady)

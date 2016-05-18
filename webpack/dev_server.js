@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 process.env.NODE_ENV = 'development'
 
 import Koa from 'koa'

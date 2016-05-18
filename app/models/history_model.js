@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { createModel } from './../helpers/model'
 import { inc, dec, evolve } from 'ramda'
 import data from './../data'

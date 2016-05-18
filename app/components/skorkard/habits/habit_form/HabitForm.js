@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { form, input, button, div } from '@motorcycle/dom'
 import { just } from 'most'
 import styles from './styles.scss'

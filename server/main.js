@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import Koa from 'koa'
 import swig from 'swig'
 

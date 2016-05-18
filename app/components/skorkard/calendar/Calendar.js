@@ -1,21 +1,18 @@
-/*jshint esversion: 6 */
 import { just } from 'most'
 import { div } from '@motorcycle/dom'
 import styles from './styles.scss'
 
 // VIEW
 
-function view(state$) {
-	return state$.map(state => 
-		div(`.${styles.calendarContainer}`)
-	)
-}
+const render = () =>
+	div(`.${styles.calendarContainer}`)
+
 
 // COMPONENT
 
-function Calendar({ DOM }) {
+const Calendar = () => {
 	const state$ = just(true)
-	const vtree$ = view(state$)
+	const vtree$ = state$.map(render)
 	
 	return {
 		DOM: vtree$

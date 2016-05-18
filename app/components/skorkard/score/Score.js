@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { just } from 'most'
 import { div } from '@motorcycle/dom'
 import styles from './styles.scss'

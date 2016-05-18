@@ -1,4 +1,3 @@
-/*jshint esversion: 6 */
 import { subject } from 'most-subject'
 
 const createSubject = () => {

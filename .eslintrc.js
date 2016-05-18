@@ -1,6 +1,7 @@
 module.exports = {
     env: {
         browser: true,
+        node: true,
         es6: true
     },
     extends: 'eslint:recommended',
@@ -10,7 +11,7 @@ module.exports = {
     rules: {
         indent: [
             'error',
-            2
+            'tab'
         ],
         'linebreak-style': [
             'error',
@@ -29,7 +30,7 @@ module.exports = {
 					{ 
 						vars: 'all', 
 						args: 'after-used', 
-						argsIgnorePattern: '_' 
+						argsIgnorePattern: '_'
 					}
 				]
     }

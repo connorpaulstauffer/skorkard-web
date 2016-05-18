@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+
 import { 
 	sortBy, prop, keys, reduce, values, 
 	merge, evolve, max, min, map 
