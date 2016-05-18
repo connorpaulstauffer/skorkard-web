@@ -16,7 +16,7 @@ const historyMods = {
 const HistoryModel = () => {
 	const [history$, historyDispatch] = 
 		createModel(historyMods, data.history)
-	
+
 	return { history$, historyDispatch }
 }
 
