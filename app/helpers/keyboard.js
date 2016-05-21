@@ -48,12 +48,13 @@ const generateKeyCommands = () => {
 		.reduce(flip(append), [])
 		
 	const captureSequence = () => fromPromise(generateSequence())
+	
+	const isNotNil = val => !isNil(val)
 
 	releasedKeyTrigger(keyDownCode$, keyUpCode$)
 		.map(captureSequence).join()
 		.map(keySequence)
-		.filter(seq => !isNil(seq))
-		.observe(console.log.bind(console))
+		.filter(isNotNil)
 }
   
 module.exports = {
