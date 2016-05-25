@@ -9,12 +9,12 @@ const render = () => div(`.${styles.calendarContainer}`)
 // COMPONENT
 
 const Calendar = () => {
-	const state$ = just(true)
-	const vtree$ = state$.map(render)
-	
-	return {
-		DOM: vtree$
-	}
+  const state$ = just(true)
+  const vtree$ = state$.map(render)
+  
+  return {
+    DOM: vtree$
+  }
 }
 
 export default Calendar

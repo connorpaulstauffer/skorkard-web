@@ -1,21 +1,21 @@
 .skorkard {
-	padding-top: 50px;
-	height: 100vh;
+  padding-top: 50px;
+  height: 100vh;
 }
 
 .column {
-	float: left;
-	height: 100%;
-	position: relative;
+  float: left;
+  height: 100%;
+  position: relative;
 }
 
 .leftColumn {
-	composes: column;
-	width: 50%;
-	border-right: solid 1px #000000;
+  composes: column;
+  width: 50%;
+  border-right: solid 1px #000000;
 }
 
 .rightColumn {
-	composes: column;
-	width: 50%;
+  composes: column;
+  width: 50%;
 }

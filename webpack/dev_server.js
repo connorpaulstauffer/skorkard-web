@@ -15,5 +15,5 @@ app.use(convert(devMiddleware(compiler, config.server.options)))
 app.use(convert(hotMiddleware(compiler)))
 
 app.listen(config.server.port, '0.0.0.0', () => {
-	console.log(`webpack-dev-server listening on port ${config.server.port} 🚀`)
+  console.log(`webpack-dev-server listening on port ${config.server.port} 🚀`)
 })
