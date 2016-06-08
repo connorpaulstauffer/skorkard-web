@@ -30,14 +30,14 @@ const keyShortcuts = () => {
   const keyUpMod$ = keyFromEvent('keyup')
     .map(({ ev, key }) => ({ ev, mod: curry(keyUpMod)(key) }))
 
-  const activeKeys$ = keyDownMod$.merge(keyUpMod$)
+  const keyShortcuts$ = keyDownMod$.merge(keyUpMod$)
     .scan(({ keys }, { mod, ev }) => ({ ev, keys: mod(keys) }), { keys: [] })
     .map(keySequence)
     .filter(({ sequence }) => isNotNil(sequence))
     .tap(preventDefault)
     .map(prop('sequence'))
     
-  return activeKeys$
+  return keyShortcuts$
 }
   
 module.exports = {
