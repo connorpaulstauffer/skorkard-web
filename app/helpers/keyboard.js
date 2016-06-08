@@ -4,31 +4,17 @@ import {
   invertObj, contains, curry, prop
 } from 'ramda'
 import { isNotNil } from './type'
+import { keyCodes, keySequences } from './../constants/keyboard'
 
-const keyCodeDictionary = {
-  'ENTER': 13,
-  'CTRL': 17,
-  'CMD': 91,
-  'OPT': 18,
-  'Z': 90,
-  'F': 70
-}
-
-const keySequences = {
-  'UNDO': ['CTRL', 'Z'],
-  'FULL': ['CMD', 'CTRL', 'F']
-}
-
-const keyDictionary = invertObj(keyCodeDictionary)
+const keyDictionary = invertObj(keyCodes)
 const keySequenceDictionary = invertObj(keySequences)
 
 const keySequence = ({ ev, keys }) => 
-  ({ sequence: keySequenceDictionary[keys], ev})
+  ({ ev, sequence: keySequenceDictionary[keys] })
 
-const lookupKey = ({ ev, key }) => ({ ev, key: keyDictionary[key] })
-const whichKey = ev => ev.keyCode || ev.which
+const lookupKey = ({ ev, keyCode }) => ({ ev, key: keyDictionary[keyCode] })
 const preventDefault = ({ ev }) => ev.preventDefault()
-const keyObject = ev => ({ ev, key: whichKey(ev) })
+const keyObject = ev => ({ ev, keyCode: ev.keyCode || ev.which })
 
 const keyFromEvent = eventName => fromEvent(eventName, window)
   .map(keyObject).map(lookupKey).filter(({ key }) => isNotNil(key))
@@ -50,7 +36,6 @@ const keyShortcuts = () => {
     .filter(({ sequence }) => isNotNil(sequence))
     .tap(preventDefault)
     .map(prop('sequence'))
-    .observe(console.log.bind(console))
     
   return activeKeys$
 }
