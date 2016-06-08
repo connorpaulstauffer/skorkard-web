@@ -1,60 +1,61 @@
-import { fromEvent, fromPromise } from 'most'
+import { fromEvent } from 'most'
 import { 
-  set, lensProp, append, flip, isNil,
-  omit, toString, isEmpty, invertObj
+  append, unless, take, indexOf,
+  invertObj, contains, curry, prop
 } from 'ramda'
+import { isNotNil } from './type'
 
 const keyCodeDictionary = {
   'ENTER': 13,
   'CTRL': 17,
-  'Z': 90
+  'CMD': 91,
+  'OPT': 18,
+  'Z': 90,
+  'F': 70
 }
 
 const keyDictionary = invertObj(keyCodeDictionary)
 
 const keySequences = {
-  'UNDO': ['CTRL', 'Z']
+  'UNDO': ['CTRL', 'Z'],
+  'FULL': ['CMD', 'CTRL', 'F']
 }
 
 const keySequenceDictionary = invertObj(keySequences)
 
-const keySequence = sequence => keySequenceDictionary[sequence]
+const keySequence = ({ ev, keys }) => 
+  ({ sequence: keySequenceDictionary[keys], ev})
 
-const releasedKeyTrigger = (keyDownCode$, keyUpCode$) => 
-  keyDownCode$.map(key => 
-    (pressedKeys) => set(lensProp(key), true, pressedKeys))
-  .merge(keyUpCode$.map(key => 
-    (pressedKeys) => omit([toString(key)], pressedKeys)))
-  .scan((pressedKeys, transform) => transform(pressedKeys), {})
-  .filter(isEmpty)
-
+const lookupKey = ({ ev, key }) => ({ ev, key: keyDictionary[key] })
 const whichKey = ev => ev.keyCode || ev.which
-const keyUpCode = () => fromEvent('keyup', window).map(whichKey)
-const keyDownCode = () => fromEvent('keydown', window).map(whichKey)
+const preventDefault = ({ ev }) => ev.preventDefault()
+const withEvent = ev => ({ ev, key: whichKey(ev) })
+const keyPresent = ({ key }) => isNotNil(key)
+const sequencePresent = ({ sequence }) => isNotNil(sequence)
 
-const lookupKey = key => keyDictionary[key]
+const keyFromEvent = eventName => fromEvent(eventName, window)
+  .map(withEvent).map(lookupKey).filter(keyPresent)
 
+const keyDownMod = (key, activeKeys) => 
+  unless(contains(key), append(key))(activeKeys)
+const keyUpMod = (key, activeKeys) => 
+  take(indexOf(key, activeKeys), activeKeys)
+  
 const generateKeyCommands = () => {
-  const keyUpCode$ = keyUpCode()
-  const keyDownCode$ = keyDownCode()
-  const keyDownCodeFiltered$ = keyDownCode$.skipRepeats()
-  const keyDown$ = keyDownCode$.map(lookupKey)
-  const keyDownFiltered$ = keyDownCodeFiltered$.map(lookupKey)
-  
-  const generateSequence = () => keyDown$
-    .take(1)
-    .concat(keyDownFiltered$)
-    .until(keyUpCode$)
-    .reduce(flip(append), [])
-    
-  const captureSequence = () => fromPromise(generateSequence())
-  
-  const isNotNil = val => !isNil(val)
+  const keyDownMod$ = keyFromEvent('keydown')
+    .map(({ ev, key }) => ({ ev, mod: curry(keyDownMod)(key) }))
+  const keyUpMod$ = keyFromEvent('keyup')
+    .map(({ ev, key }) => ({ ev, mod: curry(keyUpMod)(key) }))
 
-  releasedKeyTrigger(keyDownCode$, keyUpCode$)
-    .map(captureSequence).join()
+  const activeKeys$ = keyDownMod$.merge(keyUpMod$)
+    .scan(({ keys }, { mod, ev }) => ({ ev, keys: mod(keys) }), { keys: [] })
     .map(keySequence)
-    .filter(isNotNil)
+    .filter(sequencePresent)
+    .tap(preventDefault)
+    .map(prop('sequence'))
+    .observe(console.log.bind(console))
+    
+  return activeKeys$
 }
   
 module.exports = {

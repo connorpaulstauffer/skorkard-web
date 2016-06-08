@@ -1,4 +1,4 @@
-import * as R from 'ramda'
+import { curry } from 'ramda'
 import { div, ul } from '@motorcycle/dom'
 import styles from './styles.scss'
 
@@ -28,7 +28,7 @@ const render = (DOM, habitLists, positiveHabitsFormVtree,
 
 const view = (habitLists$, DOM, positiveHabitsForm, 
   negativeHabitsForm) => {
-  const renderWithDOM = R.curry(render)(DOM)
+  const renderWithDOM = curry(render)(DOM)
   
   return habitLists$
     .combine(renderWithDOM, positiveHabitsForm.DOM, negativeHabitsForm.DOM)
